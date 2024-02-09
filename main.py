@@ -1,4 +1,4 @@
-# -----  Патерн Singleton  -----------------------------------------------------------------------------------------
+# -----   Патерн Singleton   -----------------------------------------------------------------------------------------
 class MySigleton:
     def __new__(cls, *args, **kwargs):
         if not hasattr(cls, "instance"):
@@ -10,7 +10,7 @@ class MySigleton:
         self.y = y
 
 
-# -----  Патерн Моносостояние  --------------------------------------------------------------------------------------
+# -----   Патерн Моносостояние   --------------------------------------------------------------------------------------
 class MyMonoCondition:
     __data = {"name": "", "age": 0, "city": ""}
 
@@ -18,8 +18,8 @@ class MyMonoCondition:
         self.__dict__= self.__data
 
 
-# -----  Декораторы  ------------------------------------------------------------------------------------------------
-class MyDecorator:
+# -----   Дескрипторы   ------------------------------------------------------------------------------------------------
+class MyDescriptor:
     def __set_name__(self, owner, name):
         self.name = "_" + name
 
@@ -30,9 +30,9 @@ class MyDecorator:
         instance.__dict__[self.name] = value
 
 
-class OtherMyDecorator:
-    x = MyDecorator()
-    y = MyDecorator()
+class OtherMyDescriptor:
+    x = MyDescriptor()
+    y = MyDescriptor()
 
     def __init__(self, x, y):
         self.x = x
