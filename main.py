@@ -33,6 +33,10 @@ class MyDescriptor:
             value  # или  setattr( instance, self.name , value)
         )
 
+    def __delete__(self, instance):
+        print("---- DELETED ----")
+        del self.name
+
 
 class OtherMyDescriptor:
     x = MyDescriptor()
@@ -41,3 +45,5 @@ class OtherMyDescriptor:
     def __init__(self, x, y):
         self.x = x
         self.y = y
+
+
