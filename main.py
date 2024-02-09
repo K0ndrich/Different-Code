@@ -1,4 +1,4 @@
-# -----   Патерн Singleton   -----------------------------------------------------------------------------------------
+# -----   Патерн Singleton -> Создаеться только один екзепляр класса  -----------------------------------------------------------------------------------------
 class MySigleton:
     def __new__(cls, *args, **kwargs):
         if not hasattr(cls, "instance"):
@@ -10,7 +10,7 @@ class MySigleton:
         self.y = y
 
 
-# -----   Патерн Моносостояние   --------------------------------------------------------------------------------------
+# -----   Патерн Моносостояние -> Свойства для всех екзепляров класса одинковые --------------------------------------------------------------------------------------
 class MyMonoCondition:
     __data = {"name": "", "age": 0, "city": ""}
 
@@ -24,10 +24,14 @@ class MyDescriptor:
         self.name = "_" + name
 
     def __get__(self, instance, owner):
-        return instance.__dict__[self.name]  # или  return getattr( instance , self.name)
+        return instance.__dict__[
+            self.name
+        ]  # или  return getattr( instance , self.name)
 
     def __set__(self, instance, value):
-        instance.__dict__[self.name] = value  # или  setattr( instance, self.name , value)
+        instance.__dict__[self.name] = (
+            value  # или  setattr( instance, self.name , value)
+        )
 
 
 class OtherMyDescriptor:
@@ -37,5 +41,3 @@ class OtherMyDescriptor:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-
-
