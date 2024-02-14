@@ -69,14 +69,12 @@ class MyDescriptor:
         self.name = "_" + name
 
     def __get__(self, instance, owner):
-        return instance.__dict__[
-            self.name
-        ]  # или  return getattr( instance , self.name)
+        # или  return getattr( instance , self.name)
+        return instance.__dict__[self.name]
 
     def __set__(self, instance, value):
-        instance.__dict__[self.name] = (
-            value  # или  setattr( instance, self.name , value)
-        )
+        # или  setattr( instance, self.name , value)
+        instance.__dict__[self.name] = value
 
     def __delete__(self, instance):
         print("---- DELETED ----")
@@ -92,7 +90,8 @@ class OtherMyDescriptor:
         self.y = y
 
 
-# ----- Вычесляем чеси , минуты и секунды по указанию количества секунд -------------------------------
+# ----- Вычесляем часы , минуты и секунды по указанию количества секунд -------------------------------
+# ----- Можно добавлять значения к обьекту или другие обьекты ----------------------------------------------------
 
 
 class MyClock:
@@ -113,3 +112,30 @@ class MyClock:
     @classmethod
     def __get_formatted__(cls, x):
         return str(x).rjust(2, "0")
+
+    # добавление типа my_object + 10
+    def __add__(self, other):
+        if not isinstance(other, (int, MyClock)):
+            raise TypeError("ERROR")
+
+        sc = other
+        if isinstance(other, MyClock):
+            sc = other.second
+
+        return MyClock(self.second + sc)
+
+    # добавление типа 10 + my_object
+    def __radd__(self, other):
+        return self + other
+
+    # добавление типа my_object += 10
+    def __iadd__(self, other):
+
+        if not isinstance(other, (int, MyClock)):
+            raise TypeError("ERROR")
+        sc = other
+        if isinstance(other, MyClock):
+            sc = other.second
+        self.second += sc
+        return self
+
