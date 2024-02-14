@@ -52,6 +52,7 @@ def my_decorator_func(func):
 
     return wrapper
 
+
 @my_decorator_func
 def my_fn():
     pass
@@ -68,7 +69,7 @@ class MyDescriptor:
         ]  # или  return getattr( instance , self.name)
 
     def __set__(self, instance, value):
-        instance.__dict__[self.name]= (
+        instance.__dict__[self.name] = (
             value  # или  setattr( instance, self.name , value)
         )
 
@@ -84,3 +85,30 @@ class OtherMyDescriptor:
     def __init__(self, x, y):
         self.x = x
         self.y = y
+
+
+# ----- Вычесляем чеси , минуты и секунды по указанию количества секунд -------------------------------
+
+
+class MyClock:
+    __DAY = 86400
+
+    def __init__(self, second: int):
+
+        if not isinstance(second, int):
+            raise TypeError(" --- eror ---")
+        self.second = second % self.__DAY
+
+    def get_time(self):
+        s = self.second % 60
+        m = (self.second // 60) % 60
+        h = (self.second // 3600) % 24
+        return f"h - {self.__get_formatted__(h)} , m - {self.__get_formatted__(m)} , s - {self.__get_formatted__(s)}"
+
+    @classmethod
+    def __get_formatted__(cls, x):
+        return str(x).rjust(2, "0")
+
+
+a = Clock(31409)
+print(a.get_time())
