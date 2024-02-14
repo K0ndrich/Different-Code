@@ -109,6 +109,3 @@ class MyClock:
     def __get_formatted__(cls, x):
         return str(x).rjust(2, "0")
 
-
-a = Clock(31409)
-print(a.get_time())
