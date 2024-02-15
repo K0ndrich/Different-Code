@@ -55,12 +55,12 @@ def my_decorator_func(func):
     return wrapper
 
 
-@my_decorator_func
+@my_decorator_func  # первый способ добавление декоратора
 def my_fn():
     pass
 
 
-my_fn = my_decorator_func(my_fn)
+my_fn = my_decorator_func(my_fn)  # второй способ добавления декоратора
 
 
 # -----   Дескрипторы   ------------------------------------------------------------------------------------------------
@@ -91,38 +91,41 @@ class OtherMyDescriptor:
 
 
 # ----- Вычесляем часы , минуты и секунды по указанию количества секунд -------------------------------
-# ----- Можно добавлять значения к обьекту или другие обьекты ----------------------------------------------------
+# ----- Можно добавлять значения к обьекту или другие обьекты, сравнивать обьекты между собой ----------------------------------------------------
 
 
-class MyClock:
+class Clock:
     __DAY = 86400
 
-    def __init__(self, second: int):
+    # инициализатор
+    def __init__(self, seconds: int):
 
-        if not isinstance(second, int):
+        if not isinstance(seconds, int):
             raise TypeError(" --- eror ---")
-        self.second = second % self.__DAY
+        self.seconds = seconds % self.__DAY
 
+    # геттер
     def get_time(self):
-        s = self.second % 60
-        m = (self.second // 60) % 60
-        h = (self.second // 3600) % 24
+        s = self.seconds % 60
+        m = (self.seconds // 60) % 60
+        h = (self.seconds // 3600) % 24
         return f"h - {self.__get_formatted__(h)} , m - {self.__get_formatted__(m)} , s - {self.__get_formatted__(s)}"
 
+    # метод класса -> создан для работы только внутри класса
     @classmethod
     def __get_formatted__(cls, x):
         return str(x).rjust(2, "0")
 
     # добавление типа my_object + 10
     def __add__(self, other):
-        if not isinstance(other, (int, MyClock)):
+        if not isinstance(other, (int, Clock)):
             raise TypeError("ERROR")
 
         sc = other
-        if isinstance(other, MyClock):
-            sc = other.second
+        if isinstance(other, Clock):
+            sc = other.seconds
 
-        return MyClock(self.second + sc)
+        return Clock(self.seconds + sc)
 
     # добавление типа 10 + my_object
     def __radd__(self, other):
@@ -131,11 +134,17 @@ class MyClock:
     # добавление типа my_object += 10
     def __iadd__(self, other):
 
-        if not isinstance(other, (int, MyClock)):
+        if not isinstance(other, (int, Clock)):
             raise TypeError("ERROR")
         sc = other
-        if isinstance(other, MyClock):
-            sc = other.second
-        self.second += sc
+        if isinstance(other, Clock):
+            sc = other.seconds
+        self.seconds += sc
         return self
 
+    # оператора равенства ==
+    def __eq__(self, other):
+        if not isinstance(other, (int, Clock)):
+            raise TypeError("ERROR")
+        sc = other if isinstance(other, int) else other.seconds  # тернарный оператор
+        return self.seconds == sc
