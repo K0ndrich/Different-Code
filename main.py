@@ -95,7 +95,7 @@ class OtherMyDescriptor:
 
 
 class Clock:
-    __DAY = 86400
+    __DAY = 86400  # количество секунд в дне
 
     # инициализатор
     def __init__(self, seconds: int):
@@ -142,9 +142,24 @@ class Clock:
         self.seconds += sc
         return self
 
-    # оператора равенства ==
-    def __eq__(self, other):
+    # проверка принимаемых значений для сравнений
+    @classmethod
+    def __verify_data(self, other):
         if not isinstance(other, (int, Clock)):
             raise TypeError("ERROR")
-        sc = other if isinstance(other, int) else other.seconds  # тернарный оператор
+        return other if isinstance(other, int) else other.seconds  # тернарный оператор
+
+    # вызов оператора равенства == . Если оператор неравенства != тогда not (my_object1 == my_object2)
+    def __eq__(self, other):
+        sc = self.__verify_data(other)
         return self.seconds == sc
+
+    # вызов оператора меньше < . Если оператор больше > , тогда меняем местами обьекты my_object2 < my_object1
+    def __lt__(self, other):
+        sc = self.__verify_data(other)
+        return self.seconds < sc
+
+    # вызов оператора меньше или равно <= . Если оператор больше или равно >= , тогда меняем метсами my_object2 >= my_object1
+    def __le__(self, other):
+        sc = self.__verify_data(other)
+        return self.seconds <= sc
