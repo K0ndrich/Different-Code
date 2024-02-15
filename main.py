@@ -101,7 +101,7 @@ class Clock:
     def __init__(self, seconds: int):
 
         if not isinstance(seconds, int):
-            raise TypeError(" --- eror ---")
+            raise TypeError("ERROR")
         self.seconds = seconds % self.__DAY
 
     # геттер
@@ -163,3 +163,66 @@ class Clock:
     def __le__(self, other):
         sc = self.__verify_data(other)
         return self.seconds <= sc
+
+
+# ----- Магические Методы для работы с Списками ---------------------------------------------------------------------------------
+
+
+class List:
+    def __init__(self, marks):
+        self.marks = list(marks)
+
+    # возвращает елемент через обращение [ ]
+    def __getitem__(self, item):
+        if 0 <= item <= len(self.marks):
+            return self.marks[item]
+
+    # записываем новый елемент через a[3] = "abc", если список мал тогда розширяем
+    def __setitem__(self, key, value):
+        if not isinstance(key, int) or key < 0:
+            raise TypeError("ERROR")
+        if key >= len(self.marks):
+            off = key + 1 - len(self.marks)
+            self.marks.extend([None] * off)
+        self.marks[key] = value
+
+    # удаление елемента списка по ключу
+    def __delitem__(self, key):
+        if not isinstance(key, int) or key >= len(self.marks):
+            raise TypeError("ERROR")
+        del self.marks[key]
+
+
+# ----- Магические методы для работы с Циклами ----------------------------------------------------------------
+
+
+class Cycle:
+    def __init__(self, start=0.0, step=0.0, stop=0.0):
+        self.start = start
+        self.step = step
+        self.stop = stop
+
+    def __next__(self):
+        if self.value + self.step < self.stop:
+            self.value += self.step
+            return self.value
+        else:
+            raise StopIteration
+
+    def __iter__(self):
+        self.value = self.start - self.step
+        return self
+
+
+# создаеться таблица
+# class Cycle2D:
+#     def __init__(self, start=0.0, step=0.0, stop=0.0, rows=5):
+#         self.rows = rows
+#         self.fr = Cycle(start, step, stop) * rows
+
+
+# a = Cycle2D(0, 10, 100, 5)
+# for x in a:
+#     print(sep="\n")
+#     for y in a[x]:
+#         print(y)
