@@ -214,15 +214,28 @@ class Cycle:
         return self
 
 
-# создаеться таблица
-# class Cycle2D:
-#     def __init__(self, start=0.0, step=0.0, stop=0.0, rows=5):
-#         self.rows = rows
-#         self.fr = Cycle(start, step, stop) * rows
+# Создание таблици из списков
+class Cycle2D:
+    def __init__(self, start=0.0, step=0.0, stop=0.0, rows=5):
+        self.rows = rows
+        self.fr = Cycle(start, step, stop)
+
+    def __iter__(self):
+        self.value = 0
+        return self
+
+    def __next__(self):
+        if self.value < self.rows:
+            self.value += 1
+            return iter(self.fr)
+        else:
+            raise StopIteration
+
+    def get_info(self):
+        for row in self:
+            print("------------------")
+            for y in row:
+                print(y, end=" ")
+            print(sep="\n")
 
 
-# a = Cycle2D(0, 10, 100, 5)
-# for x in a:
-#     print(sep="\n")
-#     for y in a[x]:
-#         print(y)
