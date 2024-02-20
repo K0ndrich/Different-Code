@@ -1,23 +1,3 @@
-# -----   Патерн Singleton -> Создаеться только один екзепляр класса  -----------------------------------------------------------------------------------------
-class MySigleton:
-    def __new__(cls, *args, **kwargs):
-        if not hasattr(cls, "instance"):
-            cls.instance = super(MySigleton, cls).__new__(cls)
-        return cls.instance
-
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-
-# -----   Патерн Моносостояние -> Свойства для всех екзепляров класса одинковые --------------------------------------------------------------------------------------
-class MyMonoCondition:
-    __data = {"name": "", "age": 0, "city": ""}
-
-    def __init__(self):
-        self.__dict__ = self.__data
-
-
 # ----- Call Back Функции ------------------------------------------------------------------------------------------
 
 
@@ -90,79 +70,22 @@ class OtherMyDescriptor:
         self.y = y
 
 
-# ----- Вычесляем часы , минуты и секунды по указанию количества секунд -------------------------------
-# ----- Можно добавлять значения к обьекту или другие обьекты, сравнивать обьекты между собой ----------------------------------------------------
+# ----- Миксины -> Множетсвенное Наследование ----------------------------------------------------------------
 
 
-class Clock:
-    __DAY = 86400  # количество секунд в дне
+class FirstClass:
+    def __init__(self):
+        super().__init__()  # создание екзепляра класса Mixin и поключение его
 
-    # инициализатор
-    def __init__(self, seconds: int):
 
-        if not isinstance(seconds, int):
-            raise TypeError("ERROR")
-        self.seconds = seconds % self.__DAY
+class Mixin:
+    # внутри инициализации __init__  миксина нельзя указывать параметры
+    def __init__():
+        pass
 
-    # геттер
-    def get_time(self):
-        s = self.seconds % 60
-        m = (self.seconds // 60) % 60
-        h = (self.seconds // 3600) % 24
-        return f"h - {self.__get_formatted__(h)} , m - {self.__get_formatted__(m)} , s - {self.__get_formatted__(s)}"
 
-    # метод класса -> создан для работы только внутри класса
-    @classmethod
-    def __get_formatted__(cls, x):
-        return str(x).rjust(2, "0")
-
-    # добавление типа my_object + 10
-    def __add__(self, other):
-        if not isinstance(other, (int, Clock)):
-            raise TypeError("ERROR")
-
-        sc = other
-        if isinstance(other, Clock):
-            sc = other.seconds
-
-        return Clock(self.seconds + sc)
-
-    # добавление типа 10 + my_object
-    def __radd__(self, other):
-        return self + other
-
-    # добавление типа my_object += 10
-    def __iadd__(self, other):
-
-        if not isinstance(other, (int, Clock)):
-            raise TypeError("ERROR")
-        sc = other
-        if isinstance(other, Clock):
-            sc = other.seconds
-        self.seconds += sc
-        return self
-
-    # проверка принимаемых значений для сравнений
-    @classmethod
-    def __verify_data(self, other):
-        if not isinstance(other, (int, Clock)):
-            raise TypeError("ERROR")
-        return other if isinstance(other, int) else other.seconds  # тернарный оператор
-
-    # вызов оператора равенства == . Если оператор неравенства != тогда not (my_object1 == my_object2)
-    def __eq__(self, other):
-        sc = self.__verify_data(other)
-        return self.seconds == sc
-
-    # вызов оператора меньше < . Если оператор больше > , тогда меняем местами обьекты my_object2 < my_object1
-    def __lt__(self, other):
-        sc = self.__verify_data(other)
-        return self.seconds < sc
-
-    # вызов оператора меньше или равно <= . Если оператор больше или равно >= , тогда меняем метсами my_object2 >= my_object1
-    def __le__(self, other):
-        sc = self.__verify_data(other)
-        return self.seconds <= sc
+class SecondClass(FirstClass, Mixin):
+    pass
 
 
 # ----- Магические Методы для работы с Списками ---------------------------------------------------------------------------------
@@ -237,5 +160,3 @@ class Cycle2D:
             for y in row:
                 print(y, end=" ")
             print(sep="\n")
-
-
