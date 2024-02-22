@@ -245,7 +245,7 @@ def create_class_point(name, base, attrs):
     return type(name, base, attrs)
 
 
-# создание класса через функцию метка класс
+# создание класса через мета функцию
 class Point1(metaclass=create_class_point):
     def get_coords(self):
         return (0, 0)
@@ -262,5 +262,3 @@ class Meta(type):
 class Point2(metaclass=Meta):
     def get_coords(self):
         return (0, 0)
-
-
