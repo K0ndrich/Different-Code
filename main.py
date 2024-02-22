@@ -160,3 +160,37 @@ class Cycle2D:
             for y in row:
                 print(y, end=" ")
             print(sep="\n")
+
+
+# ----- Магические методы для работы с менеджером контекста ( with )  -------------------------------------------------------
+
+
+class DefenderVector:
+    def __init__(self, vector):
+        self.__vector = vector
+
+    # метод вызываеться при создании менеджера контекста with
+    def __enter__(self):
+        self.__temp = self.__vector[:]
+        return self.__temp
+
+    # методы вызываетсья при когда завершиласть работа с файлом
+    # в exc_type передаеться None если Exceptions не возникло
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_type is None:
+            self.__vector[:] = self.__temp
+        # возвращаем False -> значить исключения , котоые возникли внутри менеджера контекста обрабатываться не будут и выходить за менеджер тоже не будут
+        return False
+
+
+vector1 = [1, 2, 3]
+vector2 = [4, 5, 2]
+
+try:
+    # a = self.__temp , dv ссылаеться на копию списка vector1
+    # к vector1 при бавляються значения по ндексу из vector2
+    with DefenderVector(vector1) as a:
+        for index, value in enumerate(a):
+            a[index] += vector2[index]
+except:
+    print("")
