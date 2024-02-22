@@ -194,3 +194,22 @@ try:
             a[index] += vector2[index]
 except:
     print("")
+
+# ----- Вложение классы --------------------------------------------------------------
+# ----- Класс для абстрактной базы данных
+
+
+class People:
+    title = "name_title"
+    photo = "name_photo"
+    ordering = "name_id"
+
+    def __init__(self, user, psw):
+        self._user = user
+        self._psw = psw
+        self.meta = self.Meta(user + "@" + psw)
+
+    # создает идентификатор для каждой строки в базе данных
+    class Meta:
+        def __init__(self, access):
+            self.__access = access
