@@ -43,7 +43,7 @@ def my_fn():
 my_fn = my_decorator_func(my_fn)  # второй способ добавления декоратора
 
 
-# -----   Дескрипторы   ------------------------------------------------------------------------------------------------
+# -----   Дескрипторы  -> Вписываються внутрь других классов, чтоб для каждого класса не прописывать геттери и сеттеры ------------------------------------------------------------------------------------------------
 class MyDescriptor:
     def __set_name__(self, owner, name):
         self.name = "_" + name
@@ -196,7 +196,7 @@ except:
     print("")
 
 # ----- Вложение классы --------------------------------------------------------------
-# ----- Класс для абстрактной базы данных
+# Класс для абстрактной базы данных
 
 
 class People:
@@ -213,3 +213,54 @@ class People:
     class Meta:
         def __init__(self, access):
             self.__access = access
+
+
+# ----- Метакласс -> только type () ------------------------------------------------------------------------------------
+
+
+class B1:
+    pass
+
+
+class B2:
+    pass
+
+
+def method1(self):
+    print(self.__dict__)
+
+
+# создание класса через мета класс type()
+a = type(
+    "Point",
+    (B1, B2),
+    {"MAX_CORD": 100, "MIN_CORD": 0, "method1": lambda self: print(self.MAX_CORD)},
+)
+
+
+# ----- Пользовательские метакласс и метафункции для создания других классов --------------------------------------------------
+# создание мета функции для создания класса из главного метакласса type()
+def create_class_point(name, base, attrs):
+    attrs.update({"MAX_CORD": 100, "MIN_CORD": 0})
+    return type(name, base, attrs)
+
+
+# создание класса через функцию метка класс
+class Point1(metaclass=create_class_point):
+    def get_coords(self):
+        return (0, 0)
+
+
+# созданий пользовательский метакласс из главного метакласса type()
+class Meta(type):
+    def __new__(cls, name, base, attrs):
+        attrs.update({"MAX_CORD": 100, "MIN_CORD": 0})
+        return type.__new__(cls, name, base, attrs)
+
+
+# создание класса через пользовательский метакласс
+class Point2(metaclass=Meta):
+    def get_coords(self):
+        return (0, 0)
+
+
