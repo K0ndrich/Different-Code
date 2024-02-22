@@ -76,7 +76,7 @@ class Clock:
 # ----- Множетсвенное Наследование + Миксины -> Магазин с техникой ---------------------------------------------------
 class Goods:
     def __init__(self, name, weight, price):
-        super().__init__(1)  # подключаем миксин, создаеться екзепляр класса MixinLog
+        super().__init__()  # подключаем миксин, создаеться екзепляр класса MixinLog
         print(" ---- init  GOODS -----")
         self.name = name
         self.weight = weight
@@ -89,7 +89,7 @@ class Goods:
 class MixinLog:  # создание миксина
     ID = 0
 
-    def __init__(self, p1):
+    def __init__(self):
         print(" ----- init - MIXIN LOG -------")
         self.ID += 1
         self.id = self.ID
@@ -101,4 +101,3 @@ class MixinLog:  # создание миксина
 # при вызове методы, он ищетсья сначала 1. Notebook -> потом 2. Goods -> потом MixinLog
 class NoteBook(Goods, MixinLog):
     pass
-
