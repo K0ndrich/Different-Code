@@ -245,7 +245,7 @@ def create_class_point(name, base, attrs):
     return type(name, base, attrs)
 
 
-# создание класса через мета функцию
+# создание класса через мета функцию. В екзепляре етого класса не будет локальных свойств
 class Point1(metaclass=create_class_point):
     def get_coords(self):
         return (0, 0)
@@ -258,7 +258,28 @@ class Meta(type):
         return type.__new__(cls, name, base, attrs)
 
 
-# создание класса через пользовательский метакласс
+# создание класса через пользовательский метакласс. В екзепляре етого класса не будет локальных свойств
 class Point2(metaclass=Meta):
     def get_coords(self):
         return (0, 0)
+
+
+# ----- Класс Women был создан по мета классу Meta. При создании екзепляря класса Women уже есть свойства с значениями ---------------------------------------------------------
+
+
+class Meta(type):
+    def create_local_attrs(self, *args, **kwargs):
+        for key, value in self.class_attrs.items():
+            self.__dict__[key] = value
+
+    def __init__(cls, name, bases, attrs):
+        cls.class_attrs = attrs
+        # добавляет инициализотор для класса Women
+        cls.__init__ = Meta.create_local_attrs
+
+
+# екзепляри етого класса будуть иметь локальные свойства указаные ниже
+class Women(metaclass=Meta):
+    title = "123_title"
+    content = "123_content"
+    photo = "123_photo"
