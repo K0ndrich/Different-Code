@@ -1,5 +1,5 @@
-# -----  Классы данных  ----------------------------------------------------------------------
-from dataclasses import dataclass, field, InitVar
+# -----  Классы данных  -------------------------------------------------------------------------------
+from dataclasses import dataclass, field, InitVar, make_dataclass
 from pprint import pprint  # для вывода атрибутов классов данных
 from typing import Any  # анотация типов , Any - ето означает любой тип данных
 
@@ -32,7 +32,7 @@ class ThingData2:
     # нельзя присваивать атрибутам обьектам изменяемые типы данных просто так (вот так нельзя ->)
     dims: list = []
     # через ключевое слово field можно присваивать изменяемые типы
-    # default_factory = при создании начиванет ссылаться на пустой список
+    # default_factory = позволяет добавлять изменяемые типы данных в екзепляри класса. В нашом случае пустой список list
     dims: list = field(default_factory=list)
 
     def __eq__(self, other):
@@ -44,7 +44,7 @@ class ThingData2:
 # pprint(ThingData2.__dict__)  # выводит атрибути которые содержит сторонний класс данных
 
 
-# ----- Добавление функционала для классов данных -----------------------------------------------------------------------
+# ----- Добавление функционала для классов данных ---------------------------------------------------------------------------------
 
 
 class Vector3D1:
@@ -58,11 +58,11 @@ class Vector3D1:
 #  Класс Vector3D1 равносилен классу Vector3D2  (Vector3D1 == Vector3D2)
 
 
-# init = True   указывает что будет создаваться __init__ для екзепляров класса. Указываем init = False для реализации етого класса как базового для создания наследников
-# repr = True   позволяет выводить свойства екзепляра етого класа через print
-# eq = True     позволяет проверять на равенство екзпеляры етого класса между собой ==  !=
-# order = True  позволяет сравнивать екзепляри етого класса через > >= <= <=. Рабатет вместе с eq = True + order = True
-# frozen = True разрешает изменять значения локальных свойств екзепляра етого класса
+# init   = True    указывает что будет создаваться __init__ для екзепляров класса. Указываем init = False для реализации етого класса как базового для создания наследников
+# repr   = True    позволяет выводить свойства екзепляра етого класа через print
+# eq     = True    позволяет проверять на равенство екзпеляры етого класса между собой ==  !=
+# order  = True    позволяет сравнивать екзепляри етого класса через > >= <= <=. Рабатет вместе с eq = True + order = True
+# frozen = True    разрешает изменять значения локальных свойств екзепляра етого класса
 @dataclass(eq=True)
 class Vector3D2:
     # repr = False указывает что ето свойство не будет выводиться при print()
@@ -73,7 +73,7 @@ class Vector3D2:
     z: int = field(default=0)
     #  init = False не добавляет указаное свойство в инициализатор __init__ как параметр поетому уже может выводиться как локальное свойство
     length: float = field(init=False, compare=False, default=0)
-    # свойство автоматически передаеться как аргумент в __post_init__ , по умолчанию свойтво имеет значение True и принимает только bool
+    # свойство автоматически передаеться как аргумент в __post_init__ где можна с ним работать , по умолчанию свойтво имеет значение True и принимает только bool
     # свойство не добавляеться в сравнение между екзеплярами класса == !=
     calc_len: InitVar[bool] = True
 
@@ -84,7 +84,7 @@ class Vector3D2:
             self.length = (self.x * self.x + self.y * self.y + self.z * self.z) ** 0.5
 
 
-# ----- Наследование Классов Данных  -----------------------------------------------------------------------------
+# ----- Наследование Классов Данных  -----------------------------------------------------------------------------------------
 
 
 class GoodsMethodFactory:
@@ -115,22 +115,32 @@ class Book(Goods):
     price: float = 0
     weight: int | float = 0
 
-    @staticmethod
-    def get_init_measures():
-        return [0, 0, 0]
-
     # свойство оперделяеться методом, который реализован в классе више
     # в свойстве храниться список из трех елементов , по умолчанию [ 0 , 0 , 0 ]
-    measure: list = field(default_factory=Book.get_init_measures)
+    # реализацию етой функции нужно выносить в отедельний класс, если опередлить даную функцию в текущем классе тогда работать не будет
+    measure: list = field(default_factory=GoodsMethodFactory.get_init_measure)
 
     def __post_init__(self):
         super().__post_init__()
 
 
-a = Book(10, 100, "max", "kondrich")
-a1 = Book(10, 100, "max", "kondrich")
-a2 = Book(10, 100, "max", "kondrich")
-a3 = Book(10, 100, "max", "kondrich")
-a4 = Book(10, 100, "max", "kondrich")
-a5 = Book(10, 100, "max", "kondrich")
-print(a5.measure)
+# ----- Функция make_dataclass для создания классов данных через ету функцию ------------------------------------------------------------
+
+
+class DataCar1:
+    def __init__(self, model: str, max_speed, price: float = 0):
+        self.model = model
+        self.max_speed = max_speed
+        self.price = price
+
+    def __get_max_speed(self):
+        return self.max_speed
+
+
+# DataCar1 полностью равен DataCar2 (DataCar1 == DataCar2)
+
+DataCar2 = make_dataclass(
+    "DataCar2",
+    [("model", str), ("max_speed"), ("price", float, field(default=0))],
+    namespace={"__get_max_speed": lambda self: self.max_speed},
+)
