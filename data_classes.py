@@ -1,6 +1,7 @@
 # -----  Классы данных  ----------------------------------------------------------------------
 from dataclasses import dataclass, field, InitVar
 from pprint import pprint  # для вывода атрибутов классов данных
+from typing import Any  # анотация типов , Any - ето означает любой тип данных
 
 
 # простой метод создания класса данных
@@ -8,7 +9,7 @@ class ThingData1:
     # значения списка dims[] одни  для все обьектов етого класса
     def __init__(self, name, weight: int = 0, price: int = 0, dims: list = []):
         self.name = name
-        self.weight = weight 
+        self.weight = weight
         self.price = price
         self.dims = dims
 
@@ -22,6 +23,7 @@ class ThingData1:
 
 @dataclass
 class ThingData2:
+    # без указания типа декоратора dataclass не добавит в екзпеляри обьекта данное поле
     name: str
     # можно указывать значения по умолчанию
     weight: int = 1
@@ -56,9 +58,11 @@ class Vector3D1:
 #  Класс Vector3D1 равносилен классу Vector3D2  (Vector3D1 == Vector3D2)
 
 
-# init = True  указывает что будет создаваться __init__ для екзепляров класса. Для реализации етого класса как базового для создания наследников
-# repr = True  позволяет выводить свойства екзепляра етого класа через print
-# eq = True    позволяет сравнивать екзпеляры етого красса между собой
+# init = True   указывает что будет создаваться __init__ для екзепляров класса. Для реализации етого класса как базового для создания наследников
+# repr = True   позволяет выводить свойства екзепляра етого класа через print
+# eq = True     позволяет проверять на равенство екзпеляры етого класса между собой ==  !=
+# order = True  позволяет сравнивать екзепляри етого класса через > >= <= <=. Рабатет вместе с eq = True + order = True
+# frozen = True разрешает изменять значения локальных свойств екзепляра етого класса
 @dataclass(eq=True)
 class Vector3D2:
     # repr = False указывает что ето свойство не будет выводиться при print()
@@ -70,6 +74,7 @@ class Vector3D2:
     #  init = False не добавляет указаное свойство в инициализатор __init__ как параметр поетому уже может выводиться как локальное свойство
     length: float = field(init=False, compare=False, default=0)
     # свойство автоматически передаеться как аргумент в __post_init__ , по умолчанию свойтво имеет значение True и принимает только bool
+    # свойство не добавляеться в сравнение между екзеплярами класса
     calc_len: InitVar[bool] = True
 
     # __post_init__ вызываеться после __init__ . Позволяет работать с екзпеляром класса данных после инициализации
@@ -79,6 +84,53 @@ class Vector3D2:
             self.length = (self.x * self.x + self.y * self.y + self.z * self.z) ** 0.5
 
 
-a = Vector3D2(1, 2, 3)
-b = Vector3D2(5, 7, 10)
-print(a > b)
+# ----- Наследование Классов Данных  -----------------------------------------------------------------------------
+
+
+class GoodsMethodFactory:
+    @staticmethod
+    def get_init_measure():
+        return [0, 0, 0]
+
+
+@dataclass
+class Goods:
+    # current_uid ето свойство только класса Goods. В наследниках или екзеплярах его не будет
+    # ето уникальный id для каждогого екзепляра етого класса или классов наследников
+    current_uid = 0
+    uid: int = field(init=False)
+    price: Any = 0
+    weight: Any = 0
+
+    def __post_init__(self):
+        Goods.current_uid += 1
+        self.uid = Goods.current_uid
+
+
+@dataclass
+class Book(Goods):
+    # в класе наследнике переопределяються свойства от базового класса
+    title: str = ""
+    author: str = ""
+    price: float = 0
+    weight: int | float = 0
+
+    @staticmethod
+    def get_init_measures():
+        return [0, 0, 0]
+
+    # свойство оперделяеться методом, который реализован в классе више
+    # в свойстве храниться список из трех елементов , по умолчанию [ 0 , 0 , 0 ]
+    measure: list = field(default_factory=Book.get_init_measures)
+
+    def __post_init__(self):
+        super().__post_init__()
+
+
+a = Book(10, 100, "max", "kondrich")
+a1 = Book(10, 100, "max", "kondrich")
+a2 = Book(10, 100, "max", "kondrich")
+a3 = Book(10, 100, "max", "kondrich")
+a4 = Book(10, 100, "max", "kondrich")
+a5 = Book(10, 100, "max", "kondrich")
+print(a5.measure)
