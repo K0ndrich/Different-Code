@@ -1,3 +1,8 @@
+# ----- Явно указываем тип возвращаемого значения ----------------------------------------------------------------------
+def my_fn(a, b) -> int:
+    return a + b
+
+
 # ------ Call Back Функции --------------------------------------------------------------------------------------
 def my_fn1(my_fn2):
 
@@ -41,11 +46,7 @@ def my_fn():
 my_fn = my_decorator_func(my_fn)  # второй способ добавления декоратора
 
 
-# явно указываем тип возвращаемого значения
-def my_fn(a, b) -> int:
-    return a + b
-
-
+# ----- *ARGS and **KWARGS -------------------------------------------------------------------------------------------------
 # Большое количество аргументов передаеться по типу кортеж (tuple)
 def my_fn(*args):
     return args  # возвращает [(1,2,3,4,5)]
@@ -56,18 +57,19 @@ def my_fn1(**kwargs):
     return kwargs  # возвращает {"key1":1 , "key2":2}
 
 
-# Функция MAP
+# ----- Функция MAP --------------------------------------------------------------------------------------------------------------
 # map(name_function , *iterables) -> map object
 def my_fn_for_map():
     pass
 
 
 map(my_fn_for_map, [1, 2, 3])
+list(map(my_fn_for_map, [1, 2, 3]))
 
 
-# Функция FILTER
+# ----- Функция FILTER -------------------------------------------------------------------------------------------------------
 # filter(my_fn_for_filter , *iterables) -> filter object
-# If inner function return True element go in filter object
+# If inner function return True -> element go in filter object
 def my_fn_for_filter(x):
     if x > 10:
         return True
@@ -76,3 +78,4 @@ def my_fn_for_filter(x):
 
 
 filter(my_fn_for_filter, [1, 2, 3])
+list(filter(my_fn_for_filter, [1, 2, 3]))
