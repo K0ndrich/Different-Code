@@ -3,6 +3,12 @@ def my_fn(a, b) -> int:
     return a + b
 
 
+# ----- Лямбда Функция ------------------------------------------------------------------------------------------------
+# x     - ето аргумент
+# x + 2 - ето возвращаемое значение
+lambda x: x + 2
+
+
 # ------ Call Back Функции --------------------------------------------------------------------------------------
 def my_fn1(my_fn2):
 
@@ -59,17 +65,20 @@ def my_fn1(**kwargs):
 
 # ----- Функция MAP --------------------------------------------------------------------------------------------------------------
 # map(name_function , *iterables) -> map object
-def my_fn_for_map():
+def my_fn_for_map(x):
     pass
 
 
 map(my_fn_for_map, [1, 2, 3])
+map(lambda x: x * 2, [1, 2, 3])
+map(str.upper, ["name1", "name2"])
 list(map(my_fn_for_map, [1, 2, 3]))
 
 
 # ----- Функция FILTER -------------------------------------------------------------------------------------------------------
-# filter(my_fn_for_filter , *iterables) -> filter object
+# filter(my_fn_for_filter or None , *iterables) -> filter object
 # If inner function return True -> element go in filter object
+# If selected None, as function None -> filter (None , [1,2,3]) == filter(bool , [1,2,3])
 def my_fn_for_filter(x):
     if x > 10:
         return True
@@ -78,4 +87,19 @@ def my_fn_for_filter(x):
 
 
 filter(my_fn_for_filter, [1, 2, 3])
+filter(str.isdigit, [1, "hello", 2])
 list(filter(my_fn_for_filter, [1, 2, 3]))
+
+
+# ----- Функция ENUMERATE --------------------------------------------------------------------------------------------------------
+# enumerate(*iterables) -> enum object
+# Розделяет последовательность на пары кортежей по типу [ (0,10) , (1,20) , (2,30) , (3,40) ]
+# , где первое число ендекс(index) значения, а второе и есть значение(value) последователньости
+# enumerate([10,20,30,40] , my_value_index) можна указывать начальное значение индекса начало отсчета
+
+list(enumerate([10, 20, 30, 40]))
+# можно использовать цикл for
+a = [10, 20, 30, 40]
+b = {"key1": 1, "key2": 2}
+for index, value in enumerate(range(11), 5):
+    print(f"{index} --> {value}")
