@@ -15,6 +15,7 @@ def clock():
 
 
 def query():
+    # вывод все файл в указаном томе
     for i in os.walk("D:\\"):
         yield i[0]
 
@@ -31,6 +32,4 @@ def main():
         time.sleep(1)
 
 
-# main()
-my_list = [1, 2, 3, 4, 5]
-a = iter(my_list)
+main()
