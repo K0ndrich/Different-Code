@@ -39,7 +39,7 @@ async def main():
     # # вожно вызвать все задачи вместе
     # await asyncio.gather(tg)
 
-    # создание tasks (тасков) + и х выполнение
+    # создание tasks (тасков) + их выполнение
     async with asyncio.TaskGroup() as tg:
         tg.create_task(print1())
         tg.create_task(print2())
