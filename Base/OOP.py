@@ -21,6 +21,39 @@ class MyClass:
         return 2 + 2
 
 
+# -----   @property    .setter   .deleter    -------------------------------------------------------------------------------------------------------------------------
+# позволяет создавать, изменять и удалять динамические атрибуты
+
+
+class Person:
+    first_name: str
+    last_name: str
+
+    def __init__(self, first_name: str, last_name: str):
+        self.first_name = first_name
+        self.last_name = last_name
+
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
+    @full_name.setter
+    def full_name(self, value):
+        name_surname = value.split(" ")
+        self.first_name = name_surname[0]
+        self.last_name = name_surname[1]
+
+    @full_name.deleter
+    def full_name(self):
+        del self.first_name
+        del self.last_name
+
+
+a = Person("Max", "Kondrich")
+a.full_name = "Sana Olegov"
+del a.full_name
+
+
 # -----   Модификаторы Доступа   ------------------------------------------------------------------------------------------------------------------------------------------------------
 # только оповищают програмиста и не изменяют функционал
 
@@ -40,11 +73,11 @@ class MyClass:
 
 
 my_object = MyClass()
-print(my_object.a)
-print(my_object._a)
-print(my_object._MyClass__a)
+# print(my_object.a)
+# print(my_object._a)
+# print(my_object._MyClass__a)
 
-# ----- Миксины  ----------------------------------------------------------------
+# -----   Миксины    -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 # добавялет свойства и методы для класса, который будет наследовать миксин
 # миксин при наследовании пишесть самым последним, чтом значение миксина не изменилось
 # множественное наследование идет слева на право
@@ -87,6 +120,44 @@ class OtherMyDescriptor:
     def __init__(self, x, y):
         self.x = x
         self.y = y
+
+
+# -----   Абстрактный Классы , Абстрактные Методы   --------------------------------------------------------------------------------------------------------------------------
+import abc
+
+
+# создание абстрактного класса
+class AbstractClass(abc.ABC):
+    # создание абстрактного методы
+    # етот метод нужно переопределяться в классе наследнике
+    @abc.abstractmethod
+    def my_fn(self):
+        raise NotImplemented
+
+
+class MyClass(AbstractClass):
+    def my_fn(self):
+        print("hello")
+
+
+# ----- Вложение классы --------------------------------------------------------------
+# Класс для абстрактной базы данных
+
+
+class People:
+    title = "name_title"
+    photo = "name_photo"
+    ordering = "name_id"
+
+    def __init__(self, user, psw):
+        self._user = user
+        self._psw = psw
+        self.meta = self.Meta(user + "@" + psw)
+
+    # создает идентификатор для каждой строки в базе данных
+    class Meta:
+        def __init__(self, access):
+            self.__access = access
 
 
 # ----- Магические Методы для работы с Списками ---------------------------------------------------------------------------------
@@ -195,25 +266,6 @@ try:
             a[index] += vector2[index]
 except:
     print("")
-
-# ----- Вложение классы --------------------------------------------------------------
-# Класс для абстрактной базы данных
-
-
-class People:
-    title = "name_title"
-    photo = "name_photo"
-    ordering = "name_id"
-
-    def __init__(self, user, psw):
-        self._user = user
-        self._psw = psw
-        self.meta = self.Meta(user + "@" + psw)
-
-    # создает идентификатор для каждой строки в базе данных
-    class Meta:
-        def __init__(self, access):
-            self.__access = access
 
 
 # ----- Метакласс -> только type () ------------------------------------------------------------------------------------
