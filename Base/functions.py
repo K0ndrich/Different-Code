@@ -35,6 +35,20 @@ def factorial(n):
         return n * factorial(n - 1)
 
 
+# -----   Решение проблеми, когда функция береть в аргументы пустой изменяемый обькт, тоесть ссылку на обьект
+
+
+def my_fn(my_list=None):
+    if not my_list is None:
+        my_list = []
+    else:
+        my_list.append(1)
+    return my_list
+
+
+my_fn([1, 2, 3])
+
+
 # ------ Call Back Функции --------------------------------------------------------------------------------------
 def my_fn1(my_fn2):
 
