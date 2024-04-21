@@ -90,16 +90,23 @@ class Mixin:
 class MyClass(Mixin):
     a = 5
 
+    def my_fn(self):
+        return a
+
 
 class MySecondClass(MyClass, Mixin):
     a = 7
 
+
 # -----   Композиция   -------------------------------------------------------------------------------------------------------------------------------------
 
-class MyClass():
+
+class MyClass:
     pass
 
-class SecondClass():
+
+class SecondClass:
+    # создаем екзепляр первого класса внутри текущего
     a = MyClass()
 
 
@@ -197,6 +204,25 @@ class MySecondClass(MyClass):
     def __init__(self):
         super().__init__()
 
+
+# -----   Полиморфизм   ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+class MyClass:
+    def my_fn(self):
+        return f"my_fn"
+
+
+class MySecondClass(MyClass):
+    def my_fn(self):
+        return f"my_fn"
+
+
+a = MyClass
+a.my_fn()
+
+b = MySecondClass
+b.my_fn()
 
 # ----- Магические Методы для работы с Списками ---------------------------------------------------------------------------------
 
