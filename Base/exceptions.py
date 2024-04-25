@@ -50,11 +50,12 @@ try:
     try:
         raise ValueError("Value Error")
     except Exception:
-        print("INNER")
+        # print("INNER")
         raise
 
 except Exception:
-    print("OUTER")
+    # print("OUTER")
+    pass
 
 # -----   BaseExceptionGroup ->  ExceptionGroup -> ValueError   ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # позволяют поднимать сразу несколько исключений
@@ -84,4 +85,10 @@ except* ValueError:
 
 
 class MyClass(Exception):
-    pass
+    def __init__(self, value, message="Default Message"):
+        self.value = value
+        self.message = message
+        super().__init__(self.message)
+
+
+# raise MyClass("text")
